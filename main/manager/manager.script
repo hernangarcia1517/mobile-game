@@ -1,0 +1,13 @@
+function init(self)
+	msg.post(".", "acquire_input_focus") --We are going to recieve input
+end
+
+function on_message(self, message_id, message, sender)
+	--If we get a message to "load_level"
+	if message_id == hash("load_level") then
+		msg.post("#game", "load") --Tell our game proxy to load
+	elseif message_id == hash("proxy_loaded") then --If our proxy loaded
+		msg.post(sender, "init") --Tell sender to init
+		msg.post(sender, "enable") --Enable sender
+	end
+end

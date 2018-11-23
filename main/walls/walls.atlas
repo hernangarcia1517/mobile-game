@@ -1,0 +1,9 @@
+images {
+  image: "/images/wall_images/Lwall.png"
+}
+images {
+  image: "/images/wall_images/Rwall.png"
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 0

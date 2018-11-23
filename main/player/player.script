@@ -1,0 +1,73 @@
+local speed = 2000
+--local cons = 1.75
+function init(self)
+	-- Add initialization code here
+	--This line will allow the scprit to get input from the player
+	msg.post(".", "acquire_input_focus")
+	--The current speed of the player
+	self.velocity = vmath.vector3()
+	self.input = vmath.vector3()
+	self.life = true
+	self.current_animation = nil
+end
+
+function update(self, dt)
+	if self.life then
+		--This line of code is going to normalize diagonal movement (which we won't have)
+		if vmath.length_sqr(self.input) > 1 then
+			self.input = vmath.normalize(self.input)
+		end
+
+		local acceleration = self.input * speed -- * cons
+
+		local dv = acceleration * dt
+		local v0 = self.velocity
+		local v1 = self.velocity + dv
+
+		local movement = (v0 + v1) * dt * 0.5
+
+		local pos = go.get_position()
+		go.set_position(pos + movement)
+
+		self.velocity = v1
+		self.input = vmath.vector3()
+	end
+end
+--This function is going to handle all the messages passed to our player
+function on_message(self, message_id, message, sender)
+	if message_id == hash("animation_done") then
+		--Once our animation is done we are going to delete our player GO
+		go.delete()
+	elseif message_id == hash("collision_response") then
+		self.life = false
+		--If there is a colision we are going to run explode()
+		anim_play(self, hash("death"))
+		--The next line of code is going to run player_death()
+		player_death()		
+	end
+end
+--This function is going to move the square from left to right
+function on_input(self, action_id, action)
+	--NOTICE, the player does not have access to up and down motion
+	if action_id == hash("left") then
+		self.input.x = -1
+	elseif action_id == hash("right") then
+		self.input.x = 1
+	end
+end
+--This method is going to send a message to all game objects that our player has died
+function player_death()
+	local death = "player_death" --Variable with string "player_death"
+	--pass message to interface that the player is dead
+	msg.post("/guis#score", death)
+	--pass messsage to the triangle-factory that the player is dead
+	msg.post("/triangle-factory#triangle-factory", death)
+	--we still need to keep the GO from moving once a collision has been detected
+end
+--This function is going to play our animation, if nothing else is playing
+function anim_play(self, animation)
+	if self.current_animation ~= animation then
+		self.current_animation = animation
+		sprite.play_flipbook("#sprite", animation)
+	end
+end

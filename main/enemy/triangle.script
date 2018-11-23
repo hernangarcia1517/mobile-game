@@ -1,0 +1,28 @@
+local speed = 1000 --Speed of our object, just an int right now
+
+function init(self)
+	self.life = 2 --The life of our object, we will use this later
+	self.player_life = true --Creating our component that will let us know if he's alive
+end
+
+function update(self, dt)
+	if self.player_life then
+		local pos = go.get_position() --Storing the position of our GO as pos
+		--In the next line we are going to change the position of our GO with respect to Y
+		pos.y = pos.y + speed * dt
+		go.set_position(pos) --Setting our new GO position
+		self.life = self.life - dt
+
+		--In this if-statement we are going to delete our GO once its life is exhausted	
+		if self.life < 0 then
+			msg.post("/triangle-factory#triangle-factory", "triangle_death", { triangle_id = go.get_id() })
+			go.delete()
+		end
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("player_death") then
+		self.player_life = false
+	end
+end

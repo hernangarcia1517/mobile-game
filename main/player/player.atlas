@@ -1,0 +1,43 @@
+images {
+  image: "/images/player_images/square/square.png"
+}
+animations {
+  id: "death"
+  images {
+    image: "/images/player_images/death/square_collapse.png"
+  }
+  images {
+    image: "/images/player_images/death/square_collapse1.png"
+  }
+  images {
+    image: "/images/player_images/death/square_collapse2.png"
+  }
+  images {
+    image: "/images/player_images/death/square_collapse3.png"
+  }
+  images {
+    image: "/images/player_images/death/square_collapse4.png"
+  }
+  images {
+    image: "/images/player_images/death/square_collapse5.png"
+  }
+  images {
+    image: "/images/player_images/death/square_collapse6.png"
+  }
+  images {
+    image: "/images/player_images/death/square_collapse7.png"
+  }
+  images {
+    image: "/images/player_images/death/square_collapse8.png"
+  }
+  images {
+    image: "/images/player_images/death/square_collapse9.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 20
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 0

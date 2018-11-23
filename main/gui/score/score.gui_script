@@ -1,0 +1,26 @@
+function init(self)
+	--Creating a score component
+	self.score = 0
+	--Creating our component that will let us know if our player is alive
+	self.player_life = true
+end
+
+function update(self, dt)
+	--If our player s alive we are going to do this if statement
+	if self.player_life then
+		--We are going to set th score with respect to the time that the player has survived
+		self.score = self.score + dt * 2.5
+		--Flooring the score to prevent decimals, storing it as set_score
+		local set_score = math.floor(self.score)
+		local scorenode = gui.get_node("score") --Getting the node with the ID: score
+		gui.set_text(scorenode, set_score) --Setting the score as set_score
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	--If our interface recieves a message that the player is dead, then
+	--we set player_life to false
+	if message_id == hash("player_death") then
+		self.player_life = false
+	end
+end
