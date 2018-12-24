@@ -1,0 +1,49 @@
+require "main.game_module"
+local frequency = .06
+local max_x = get_screen_width() - 15
+local min_x = 15
+--On initialization of the GO this code will run
+function init(self)
+	self.timer = 1 / frequency --Frequency of spawning the bubbles
+	self.player_dead = false --If our player is dead
+	self.live_bubbles = {} --Table to store all the instances of our spawned bubbles
+	--Make the game deterministic
+	math.randomseed(os.clock() * 100000)
+end
+--Every frame this code will run
+function update(self, dt)
+	--If our player is alive, perform
+	if self.player_dead == false then
+		self.timer = self.timer - dt --Timing our next spawn
+		if self.timer < 0 then
+			self.timer = 1 / frequency --Updating our timer
+			local pos = go.get_position() --Getting out factory position
+			pos.x = vmath.lerp(math.random(), min_x, max_x) --Setting our new position
+			local component = "#s_b-fac" --b_b-fact component
+			--Moving our component, and storing the enemy id
+			local id = factory.create(component, pos, nil, nil, .1)
+			table.insert(self.live_bubbles, id) --Saving the bubbles id in a table
+		end
+	end
+end
+--When this script receives a message this code will run
+function on_message(self, message_id, message, sender)
+	--If we receive a message that our player is dead... Perform
+	if message_id == hash("player_death") then
+		self.player_dead = true --Setting our player_death to true
+		--Looping through all our instances of bubbles to message them player_death
+		for _, bubble_id in ipairs(self.live_bubbles) do
+			msg.post(bubble_id, "player_death") --This is to stop their movement
+		end
+		--Elseif we receive a message that one of our bubbles is dead... Perform
+	elseif message_id == hash("bubble_death") then
+		local updated_bubbles = {} --Creating a new table
+		for _, bubbles_id in ipairs(self.live_bubbles) do --Looping through our table
+			--This if statement is to erase the first created bubble, since it's dead
+			if _ > 1 then
+				updated_bubbles[_- 1] = self.live_bubbles[_]
+			end
+		end
+		self.live_bubbles = updated_bubbles --Setting our table to the updated one
+	end
+end

@@ -1,0 +1,41 @@
+require "main.game_module"
+
+function init(self)
+	--Creating a score component
+	self.score = 0
+	--Creating our component that will let us know if our player is alive
+	self.player_life = true
+	self.file_path = sys.get_save_file("suber_sub", "high_score")
+	print(self.file_path)
+	self.high_score = sys.load(self.file_path)
+	if not next(self.high_score) then
+		self.high_score[1] = 0
+	end
+end
+
+function update(self, dt)
+	--If our player s alive we are going to do this if statement
+	if self.player_life then
+		--We are going to set th score with respect to the time that the player has survived
+		self.score = self.score + dt --Seconds
+		--Flooring the score to prevent decimals, storing it as set_score
+		local set_score = math.floor(self.score)
+		local scorenode = gui.get_node("score") --Getting the node with the ID: score
+		set_current_score(set_score)
+		gui.set_text(scorenode, set_score) --Setting the score as set_score
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	--If our interface recieves a message that the player is dead, then
+	--we set player_life to false
+	if message_id == hash("player_death") then
+		self.player_life = false
+		if self.high_score[1] < self.score then
+			self.high_score[1] = self.score
+		end
+		if not sys.save(self.file_path, self.high_score) then
+			print("ERROR: high score not saved correctly")
+		end
+	end
+end

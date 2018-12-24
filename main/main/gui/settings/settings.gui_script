@@ -1,0 +1,110 @@
+require "main.game_module"
+function init(self)
+	msg.post("#", "hide_settings")
+	self.active = false
+	self.music_pressed = false
+	self.SFX_pressed = false
+	self.from_end = false
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("hide_settings") then
+		msg.post("#", "disable")
+		self.active = false
+	elseif message_id == hash("show_settings") then
+		msg.post("#", "enable")
+		self.active = true
+		self.from_end = get_from_end()
+	end
+end
+
+function on_input(self, action_id, action)
+	--COMPUTER INPUT
+	if action_id == hash("click") and action.pressed and self.active then
+		local back_node = gui.get_node("back-arrow")
+		local music_node = gui.get_node("music-over")
+		local SFX_node = gui.get_node("SFX-over")
+
+		if gui.pick_node(back_node, action.x, action.y) then --If we are going back
+			if self.from_end == true then
+				msg.post("/manager#manager", "load_done")
+				msg.post("#", "hide_settings")
+			elseif self.from_end == false then
+				msg.post("/manager#manager", "load_begin")
+				msg.post("#", "hide_settings")
+			end
+		elseif gui.pick_node(music_node, action.x, action.y) and self.music_pressed == false then
+			if is_music_playing() == true then
+				stop_menu_music()
+			end
+			local music_node_bg = gui.get_node("music-over-bg") --Get the button texture
+			set_music_play(self.music_pressed) --Set the music play to false
+			gui.set_color(music_node_bg, vmath.vector4(1, 1, 1, 0))
+			self.music_pressed = true --Declare that we have pressed the button
+		elseif gui.pick_node(music_node, action.x, action.y) and self.music_pressed == true then
+			if is_music_playing() == false then
+				play_menu_music()
+			end
+			local music_node_bg = gui.get_node("music-over-bg") --Get the button texture0
+			set_music_play(self.music_pressed) --Set the music play to true
+			gui.set_color(music_node_bg, vmath.vector4(1, 1, 1, 1))
+			self.music_pressed = false --Declare that we have not yet pressed this button
+		elseif gui.pick_node(SFX_node, action.x, action.y) and self.SFX_pressed == false then --If we have picked the SFX button and it has not been pressed
+			local SFX_node_bg = gui.get_node("SFX-over-bg") --Get the button texture
+			set_SFX_play(self.SFX_pressed) --Set the SFX play to false
+			gui.set_color(SFX_node_bg, vmath.vector4(1, 1, 1, 0)) --Change the alpha to 0
+			self.SFX_pressed = true --Declare that we have pressed the button
+		elseif gui.pick_node(SFX_node, action.x, action.y) and self.SFX_pressed == true then --If we have picked the SFX button and it has been pressed
+			local SFX_node_bg = gui.get_node("SFX-over-bg") --Get the button texture
+			set_SFX_play(self.SFX_pressed) --Set the SX play to true
+			gui.set_color(SFX_node_bg, vmath.vector4(1, 1, 1, 1)) --Change the alpha to 1
+			self.SFX_pressed = false --Declare that we have not yet pressed this button
+		end
+	end
+	--TOUCH INPUT
+	if action_id == hash("touch") and action.pressed and self.active then
+		local back_node = gui.get_node("back-arrow")
+		local music_node = gui.get_node("music-over")
+		local SFX_node = gui.get_node("SFX-over")
+		--If our action is touch.. Perform
+		if action.touch then
+			for _, touchdata in ipairs(action.touch) do
+				if gui.pick_node(back_node, touchdata.x, touchdata.y) then --If we are going back
+					if self.from_end == true then
+						msg.post("/manager#manager", "load_done")
+						msg.post("#", "hide_settings")
+					elseif self.from_end == false then
+						msg.post("/manager#manager", "load_begin")
+						msg.post("#", "hide_settings")
+					end
+				elseif gui.pick_node(music_node, touchdata.x, touchdata.y) and action.released and self.music_pressed == false then
+					if is_music_playing() == true then
+						stop_menu_music()
+					end
+					local music_node_bg = gui.get_node("music-over-bg") --Get the button texture
+					set_music_play(self.music_pressed) --Set the music play to false
+					gui.set_color(music_node_bg, vmath.vector4(1, 1, 1, 0))
+					self.music_pressed = true --Declare that we have pressed the button
+				elseif gui.pick_node(music_node, touchdata.x, touchdata.y) and action.released and self.music_pressed == true then
+					if is_music_playing() == false then
+						play_menu_music()
+					end
+					local music_node_bg = gui.get_node("music-over-bg") --Get the button texture0
+					set_music_play(self.music_pressed) --Set the music play to true
+					gui.set_color(music_node_bg, vmath.vector4(1, 1, 1, 1))
+					self.music_pressed = false --Declare that we have not yet pressed this button
+				elseif gui.pick_node(SFX_node, touchdata.x, touchdata.y) and action.released and self.SFX_pressed == false then --If we have picked the SFX button and it has not been pressed
+					local SFX_node_bg = gui.get_node("SFX-over-bg") --Get the button texture
+					set_SFX_play(self.SFX_pressed) --Set the SFX play to false
+					gui.set_color(SFX_node_bg, vmath.vector4(1, 1, 1, 0)) --Change the alpha to 0
+					self.SFX_pressed = true --Declare that we have pressed the button
+				elseif gui.pick_node(SFX_node, touchdata.x, touchdata.y) and action.released and self.SFX_pressed == true then --If we have picked the SFX button and it has been pressed
+					local SFX_node_bg = gui.get_node("SFX-over-bg") --Get the button texture
+					set_SFX_play(self.SFX_pressed) --Set the SX play to true
+					gui.set_color(SFX_node_bg, vmath.vector4(1, 1, 1, 1)) --Change the alpha to 1
+					self.SFX_pressed = false --Declare that we have not yet pressed this button
+				end
+			end
+		end
+	end
+end

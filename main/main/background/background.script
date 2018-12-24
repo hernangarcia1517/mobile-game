@@ -1,0 +1,22 @@
+local speed = 50 --Speed of the background moving
+function init(self)
+	self.player_life = true --If the playe is alive
+	self.position = go.get_world_position() --Getting the position of the GO relative to the world
+end
+
+function update(self, dt)
+	if self.player_life then --If payer is alive.. Perform
+		self.position = go.get_world_position() --Updating our position
+		if self.position.y <= 4500 then --If we are not out of bounds then
+			local pos = go.get_position() --MOVE
+			pos.y = pos.y + speed * dt
+			go.set_position(pos)
+		end
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("player_death") then --Stop the background movement if our player is dead
+		self.player_life = false
+	end
+end

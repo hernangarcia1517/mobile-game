@@ -1,0 +1,43 @@
+images {
+  image: "/images/enemy_images/morningstar.png"
+}
+animations {
+  id: "explosion"
+  images {
+    image: "/images/player_images/death/explosion1.png"
+  }
+  images {
+    image: "/images/player_images/death/explosion2.png"
+  }
+  images {
+    image: "/images/player_images/death/explosion3.png"
+  }
+  images {
+    image: "/images/player_images/death/explosion4.png"
+  }
+  images {
+    image: "/images/player_images/death/explosion5.png"
+  }
+  images {
+    image: "/images/player_images/death/explosion6.png"
+  }
+  images {
+    image: "/images/player_images/death/explosion7.png"
+  }
+  images {
+    image: "/images/player_images/death/explosion8.png"
+  }
+  images {
+    image: "/images/player_images/death/explosion9.png"
+  }
+  images {
+    image: "/images/player_images/death/explosion10.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 15
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+margin: 0
+extrude_borders: 5
+inner_padding: 0

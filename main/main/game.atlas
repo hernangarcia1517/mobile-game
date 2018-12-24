@@ -1,0 +1,18 @@
+images {
+  image: "/images/back/big_bubble.png"
+}
+images {
+  image: "/images/back/medium_bubble.png"
+}
+images {
+  image: "/images/back/mediumbig_bubble.png"
+}
+images {
+  image: "/images/back/small_bubble.png"
+}
+images {
+  image: "/images/back/background2.png"
+}
+margin: 0
+extrude_borders: 7
+inner_padding: 0

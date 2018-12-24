@@ -1,0 +1,84 @@
+animations {
+  id: "left"
+  images {
+    image: "/images/player_images/player-img/submarine.png"
+  }
+  images {
+    image: "/images/player_images/player-img/submarine2.png"
+  }
+  images {
+    image: "/images/player_images/player-img/submarine3.png"
+  }
+  images {
+    image: "/images/player_images/player-img/submarine4.png"
+  }
+  images {
+    image: "/images/player_images/player-img/submarine5.png"
+  }
+  playback: PLAYBACK_LOOP_PINGPONG
+  fps: 5
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "right"
+  images {
+    image: "/images/player_images/player-img/submarine.png"
+  }
+  images {
+    image: "/images/player_images/player-img/submarine2.png"
+  }
+  images {
+    image: "/images/player_images/player-img/submarine3.png"
+  }
+  images {
+    image: "/images/player_images/player-img/submarine4.png"
+  }
+  images {
+    image: "/images/player_images/player-img/submarine5.png"
+  }
+  playback: PLAYBACK_LOOP_PINGPONG
+  fps: 5
+  flip_horizontal: 1
+  flip_vertical: 0
+}
+animations {
+  id: "death"
+  images {
+    image: "/images/player_images/death/explosion1.png"
+  }
+  images {
+    image: "/images/player_images/death/explosion2.png"
+  }
+  images {
+    image: "/images/player_images/death/explosion3.png"
+  }
+  images {
+    image: "/images/player_images/death/explosion4.png"
+  }
+  images {
+    image: "/images/player_images/death/explosion5.png"
+  }
+  images {
+    image: "/images/player_images/death/explosion6.png"
+  }
+  images {
+    image: "/images/player_images/death/explosion7.png"
+  }
+  images {
+    image: "/images/player_images/death/explosion8.png"
+  }
+  images {
+    image: "/images/player_images/death/explosion9.png"
+  }
+  images {
+    image: "/images/player_images/death/explosion10.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 15
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+margin: 0
+extrude_borders: 7
+inner_padding: 0

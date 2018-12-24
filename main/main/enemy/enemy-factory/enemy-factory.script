@@ -1,0 +1,52 @@
+require "main.game_module"
+local max_x = get_screen_width() - 15
+local min_x = 15
+--On initialization of the GO this code will run
+function init(self)
+	self.frequency = .5
+	self.timer = 1 / self.frequency --Frequency of spawning the enemies
+	self.player_dead = false --If our player is dead
+	self.live_enemies = {} --Table to store all the instances of our spawned enemmies
+	--Make the game deterministic
+	math.randomseed(os.clock() * 1000000)
+end
+--Every frame this code will run
+function update(self, dt)
+	--If our player is alive, perform
+	if self.player_dead == false then
+		self.timer = self.timer - dt --Timing our next spawn
+		if self.timer < 0 then
+			self.timer = 1 / self.frequency --Updating our timer
+			local pos = go.get_position() --Getting out factory position
+			pos.x = vmath.lerp(math.random(), min_x, max_x) --Setting our new position
+			local component = "#enemy-fac" --enemy-fact component
+			--Moving our component, and storing the enemy id
+			local id = factory.create(component, pos, nil, nil, .1)
+			table.insert(self.live_enemies, id) --Saving the enemy id in a table
+			if self.frequency < 2.5 then --Increasing our frequency
+				self.frequency = self.frequency + (dt * 3)
+			end
+		end
+	end
+end
+--When this script receives a message this code will run
+function on_message(self, message_id, message, sender)
+	--If we receive a message that our player is dead... Perform
+	if message_id == hash("player_death") then
+		self.player_dead = true --Setting our player_death to true
+		--Looping through all our instances of enemies to message them player_death
+		for _, enemy_id in ipairs(self.live_enemies) do
+			msg.post(enemy_id, "player_death") --This is to stop their movement
+		end
+	--Elseif we receive a message that one of our enemies is dead... Perform
+	elseif message_id == hash("enemy_death") then
+		local updated_enemies = {} --Creating a new table
+		for _, enemy_id in ipairs(self.live_enemies) do --Looping through our table
+			--This if statement is to erse the first created enemy, since it's dead
+			if _ > 1 then
+				updated_enemies[_- 1] = self.live_enemies[_]
+			end
+		end
+		self.live_enemies = updated_enemies --Setting our table to the updated one
+	end
+end

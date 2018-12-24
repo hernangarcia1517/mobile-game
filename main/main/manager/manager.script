@@ -1,0 +1,26 @@
+require "main.game_module"
+function init(self)
+	msg.post(".", "acquire_input_focus") --We are going to recieve input
+end
+
+function on_message(self, message_id, message, sender)
+	--If we get a message to "load_level"
+	if message_id == hash("load_level") then
+		stop_menu_music()
+		msg.post("#game", "load") --Tell our game proxy to load
+	elseif message_id == hash("load_settings") then
+		msg.post("/gui#settings", "show_settings")
+	elseif message_id == hash("load_begin") then
+		msg.post("/gui#begin", "show_begin")
+	elseif message_id == hash("load_done") then
+		msg.post("/gui#done", "show_done")
+	elseif message_id == hash("proxy_loaded") then --If our proxy loaded
+		msg.post(sender, "init") --Tell sender to init
+		msg.post(sender, "enable") --Enable sender
+	elseif message_id == hash("player_death") then
+		msg.post("#game", "disable")
+		msg.post("#game", "final")
+		msg.post("#game", "unload")
+		msg.post("/gui#done", "show_done")
+	end
+end

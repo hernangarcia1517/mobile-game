@@ -1,0 +1,60 @@
+require "main.game_module"
+function init(self)
+	msg.post(".", "acquire_input_focus") --In order for our script to get input
+	msg.post("#", "show_begin") --We are going to enable our gui
+	self.active = false
+end
+
+function on_message(self, message_id, message, sender)
+	--If we get a "show_begin" message we are going to show our begin gui
+	if message_id == hash("show_begin") then
+		msg.post("#", "enable") --Enable our gui
+		self.active = true
+		if is_music_playing() == false and get_music_play() == true then
+			play_menu_music()
+		end
+	--if we get a "hide_begin" message we are going to hide our begin gui
+	elseif message_id == hash("hide_begin") then
+		msg.post("#", "disable") --Disable our gui
+		self.active = false
+	end
+end
+
+function on_input(self, action_id, action)
+	--COMPUTER INPUT
+	--If we recive touch and it is pressed, AND our gui is active... perform
+	if action_id == hash("click") and action.pressed and self.active then
+		local start_node = gui.get_node("start") --Get our play button
+		local settings_node = gui.get_node("gear") --Get our settings button
+		--check if the action is happening in the button
+		if gui.pick_node(start_node, action.x, action.y) then
+			--Message our manager script to load level
+			msg.post("/manager#manager", "load_level")
+			msg.post("#", "hide_begin") --Hide our gui
+		elseif gui.pick_node(settings_node, action.x, action.y) then
+			---Message our manager script to load settings
+			msg.post("/manager#manager", "load_settings")
+			msg.post("#", "hide_begin")
+		end
+	end
+	--]]
+	--TOUCH INPUT
+	if action_id == hash("touch") and action.released and self.active then
+		local start_node = gui.get_node("start")
+		local settings_node = gui.get_node("gear") --Get our settings button
+		--If our action is touch.. Perform
+		if action.touch then
+			for _, touchdata in ipairs(action.touch) do --Looping through our touch IDs
+				--Checking if the touch happened in our node
+				if gui.pick_node(start_node, touchdata.x, touchdata.y) then
+					--Message our manager script to load level
+					msg.post("/manager#manager", "load_level")
+					msg.post("#", "hide_begin") --Hide our gui
+				elseif gui.pick_node(settings_node, touchdata.x, touchdata.y) then
+					msg.post("/manager#manager", "load_settings")
+					msg.post("#", "hide_begin")
+				end
+			end
+		end
+	end
+end

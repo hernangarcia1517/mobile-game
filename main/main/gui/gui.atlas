@@ -1,0 +1,27 @@
+images {
+  image: "/images/gui_images/window1.png"
+}
+images {
+  image: "/images/gui_images/button2.png"
+}
+images {
+  image: "/images/gui_images/button3.png"
+}
+images {
+  image: "/images/gui_images/button4.png"
+}
+images {
+  image: "/images/gui_images/button5.png"
+}
+images {
+  image: "/images/gui_images/button6.png"
+}
+images {
+  image: "/images/gui_images/gear-icon.png"
+}
+images {
+  image: "/images/gui_images/back_arrow.png"
+}
+margin: 0
+extrude_borders: 5
+inner_padding: 0
